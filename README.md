@@ -9,4 +9,4 @@ This project is for CSC-570: Critical Creative Computing at Cal Poly
 
 ### Contributors
 - Nathan McCutchen ([@N8WM](https://github.com/N8WM))
-- ...
+- Mihika Nigam ([@MihikaNigam](https://github.com/MihikaNigam))
