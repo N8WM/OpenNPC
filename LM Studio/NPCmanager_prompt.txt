@@ -1,0 +1,39 @@
+This is a game. There are two good friends named Jett and Knox. Generate a brief backstory for these two characters. I will use the generated output to provide two generic agents who inherit the personality, background, and story generated, so make sure to explain rationales. It will eventually be the job of the player of the game to interact with the two agents and resolve a conflict.
+What to include:
+- Background for Jett
+- Background for Knox
+- How Jett and Knox met
+- What they first bonded over
+- Their favorite pastime activity together (only if it happens to be different than what they bonded over)
+- A relationship conflict
+  > Causing tension between Jett and Knox
+  > Making them not be together
+  > The purpose of the game is for this conflict to be strategically resolved by the player
+- Jett's POV of the conflict (unsolved rationale to be provided to the Jett generic agent)
+- Knox's POV of the conflict (unsolved rationale to be provided to the Knox generic agent)
+Use the following format:
+```
+<background class="Jett">
+// plaintext
+</background>
+<background class="Knox">
+// plaintext
+</background>
+<met>
+// plaintext
+</met>
+<bond>
+// plaintext
+</bond>
+<pastime>
+// plaintext
+</pastime>
+<conflict>
+// plaintext
+</conflict>
+<pov class="Jett">
+// plaintext
+</pov>
+<pov class="Knox">
+// plaintext
+</pov>
