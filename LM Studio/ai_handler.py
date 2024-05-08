@@ -10,6 +10,7 @@ model = "lmstudio-community/Meta-Llama-3-8B-Instruct-GGUF"
 
 sessions_file_path = "saved_sessions.pkl"
 
+# Try to load session history from file
 def load_sessions():
     if os.path.exists(sessions_file_path):
         # Read Pickle data back into a dictionary
@@ -18,11 +19,13 @@ def load_sessions():
         return sessions
     return None
 
+# Get the session history for a specific agent, or make one if it doesn't exist
 def get_session(chat_id, sessions):
     if chat_id not in sessions:
         sessions[chat_id] = []
     return sessions[chat_id]
 
+# Send a system prompt to a specific session (agent)
 def send_system_preset(sessionID, preset, sessions):
     session = get_session(sessionID, sessions)
     completion = client.chat.completions.create(
@@ -36,6 +39,7 @@ def send_system_preset(sessionID, preset, sessions):
     sessions[sessionID] = session
     return completion.choices[0].message.content
 
+# Send a standard chat message to a specific session (agent)
 def send_chat(sessionID, chat, sessions):
     session = get_session(sessionID, sessions)
     completion = client.chat.completions.create(
@@ -50,6 +54,7 @@ def send_chat(sessionID, chat, sessions):
     sessions[sessionID] = session
     return completion.choices[0].message.content
 
+# Save chat histories to a file
 def save_data(sessions):
     with open(sessions_file_path, "wb") as pickle_file:
         pickle.dump(sessions, pickle_file)

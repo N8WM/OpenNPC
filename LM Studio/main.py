@@ -4,6 +4,7 @@ npcs = []
 
 global sessions
 
+# Have the NPC manager generate a scenario
 def init_npc_manager(session_id, prompt_file):
     with open(prompt_file, 'r') as f:
         NPCmanager_prompt = f.read()
@@ -11,9 +12,11 @@ def init_npc_manager(session_id, prompt_file):
     init_scenario = send_chat(session_id, NPCmanager_prompt, sessions)
     return BeautifulSoup(init_scenario, "html.parser")
 
+# Initialize a NPC agent with a system prompt
 def init_npc(session_id, prompt):
     return send_system_preset(session_id, prompt, sessions)
 
+# Send a message to an NPC agent
 def chat_npc(session_id, prompt):
     return send_chat(session_id, prompt, sessions)
 
@@ -32,9 +35,13 @@ def chat_loop():
         if (user_input.lower() == "q" or user_input.lower() == "quit"):
             break
         elif (user_input.split(" ")[0].lower() == "talk"):
+            new_npc = " ".join(user_input.split(" ")[1:])
+            if (not new_npc in npcs):
+                print(f"{new_npc} is not a valid NPC.")
+                continue
             if (npc != ""):
                 print(f"You are no longer talking to {npc}.")
-            npc = " ".join(user_input.split(" ")[1:])
+            npc = new_npc
             print(f"You are now talking to {npc}.")
         elif (npc == ""):
             print("You are not talking to anyone yet.")
@@ -44,8 +51,6 @@ def chat_loop():
 
 
 if __name__ == "__main__":
-    # Add code to run when module2.py is executed from the command line
-
     NPC_Manager_ID = 'NPC_Manager'
     Jett_ID = "Jett"
     Knox_ID = "Knox"
@@ -54,6 +59,8 @@ if __name__ == "__main__":
 
     sessions = load_sessions()
     if (not sessions):
+        # If failed to load sessions from file
+        # Generate a whole new scenario and set up agents
         sessions = {}
         Bs_data = init_npc_manager(NPC_Manager_ID, 'NPCmanager_prompt.txt')
 
