@@ -8,7 +8,6 @@ import os
 client = OpenAI(base_url="http://localhost:1234/v1", api_key="lm-studio")
 model = "lmstudio-community/Meta-Llama-3-8B-Instruct-GGUF"
 
-sessions = {}
 sessions_file_path = "saved_sessions.pkl"
 
 def load_sessions():
@@ -16,16 +15,16 @@ def load_sessions():
         # Read Pickle data back into a dictionary
         with open(sessions_file_path, "rb") as pickle_file:
             sessions = pickle.load(pickle_file)
-        return True
+        return sessions
     return None
 
-def get_session(chat_id):
+def get_session(chat_id, sessions):
     if chat_id not in sessions:
         sessions[chat_id] = []
     return sessions[chat_id]
 
-def send_system_preset(sessionID, preset):
-    session = get_session(sessionID)
+def send_system_preset(sessionID, preset, sessions):
+    session = get_session(sessionID, sessions)
     completion = client.chat.completions.create(
         model=model,
         messages= session + [
@@ -37,8 +36,8 @@ def send_system_preset(sessionID, preset):
     sessions[sessionID] = session
     return completion.choices[0].message.content
 
-def send_chat(sessionID, chat):
-    session = get_session(sessionID)
+def send_chat(sessionID, chat, sessions):
+    session = get_session(sessionID, sessions)
     completion = client.chat.completions.create(
         model=model,
         messages= session + [
@@ -51,6 +50,6 @@ def send_chat(sessionID, chat):
     sessions[sessionID] = session
     return completion.choices[0].message.content
 
-def save_data():
+def save_data(sessions):
     with open(sessions_file_path, "wb") as pickle_file:
         pickle.dump(sessions, pickle_file)

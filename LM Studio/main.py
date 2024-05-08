@@ -2,18 +2,20 @@ from ai_handler import *
 
 npcs = []
 
+global sessions
+
 def init_npc_manager(session_id, prompt_file):
     with open(prompt_file, 'r') as f:
         NPCmanager_prompt = f.read()
 
-    init_scenario = send_chat(session_id, NPCmanager_prompt)
+    init_scenario = send_chat(session_id, NPCmanager_prompt, sessions)
     return BeautifulSoup(init_scenario, "html.parser")
 
 def init_npc(session_id, prompt):
-    return send_system_preset(session_id, prompt)
+    return send_system_preset(session_id, prompt, sessions)
 
 def chat_npc(session_id, prompt):
-    return send_chat(session_id, prompt)
+    return send_chat(session_id, prompt, sessions)
 
 def chat_loop():
     print("\n\n\n\n\n\n")
@@ -50,7 +52,9 @@ if __name__ == "__main__":
     npcs.append(Jett_ID)
     npcs.append(Knox_ID)
 
-    if (not load_sessions()):
+    sessions = load_sessions()
+    if (not sessions):
+        sessions = {}
         Bs_data = init_npc_manager(NPC_Manager_ID, 'NPCmanager_prompt.txt')
 
         background_jett = Bs_data.find('background', class_=Jett_ID)
@@ -74,5 +78,5 @@ if __name__ == "__main__":
 
     chat_loop()
 
-    save_data()
+    save_data(sessions)
 
