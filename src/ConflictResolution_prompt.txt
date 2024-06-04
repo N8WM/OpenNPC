@@ -1,0 +1,8 @@
+Two friends have been fighting. A third party has been talking to both of them and trying to resolve the conflict.
+I am going to ask each of them how they feel about the other person, and send you what they said in response.
+When you recieve these messages, rate the current state of the conflict from 0 to 5
+
+0 being they hate each other
+5 being they have completely made up
+
+Respond with only this number.

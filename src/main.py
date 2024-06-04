@@ -2,7 +2,11 @@ from ai_handler import *
 
 npcs = []
 
+
 global sessions
+global NPC_Manager_ID
+global Conflict_Resolution_Checker_ID
+global conflict_resolution_question
 
 # Have the NPC manager generate a scenario
 def init_npc_manager(session_id, prompt_file):
@@ -12,6 +16,13 @@ def init_npc_manager(session_id, prompt_file):
     init_scenario = send_chat(session_id, NPCmanager_prompt, sessions)
     return BeautifulSoup(init_scenario, "html.parser")
 
+# Have the NPC manager generate a scenario
+def init_conflict_resolution_checker(session_id, prompt_file):
+    with open(prompt_file, 'r') as f:
+        ConflictResolution_prompt = f.read()
+
+    send_chat(session_id, ConflictResolution_prompt, sessions)
+
 # Initialize a NPC agent with a system prompt
 def init_npc(session_id, prompt):
     return send_system_preset(session_id, prompt, sessions)
@@ -19,6 +30,10 @@ def init_npc(session_id, prompt):
 # Send a message to an NPC agent
 def chat_npc(session_id, prompt):
     return send_chat(session_id, prompt, sessions)
+
+# Send a message to an NPC agent that the agent will "forget"
+def chat_npc_forgetful(session_id, prompt):
+    return send_chat_without_saving(session_id, prompt, sessions)
 
 def chat_loop():
     print("\n\n\n\n\n\n")
@@ -29,6 +44,10 @@ def chat_loop():
             + "QUIT\t\tEnd chat session.\n")
 
     npc = ""
+
+    new_responses = {}
+    for n in npcs:
+        new_responses[n] = 0
 
     while True:
         user_input = input("\n> ")
@@ -47,15 +66,38 @@ def chat_loop():
             print("You are not talking to anyone yet.")
         else:
             response = chat_npc(npc, "" + user_input)
+            new_responses[npc] = 1
             print(f"{npc}: {response}\n")
+
+        allNew = True
+        for n in npcs:
+            if (new_responses[n] == 0):
+                allNew = False
+                break
+
+        if (allNew):
+            # evaluate conflict
+            print("Evaluating conflict...\n")
+            responses = ""
+            for n in npcs:
+                new_responses[n] = 0
+                responses += f"{n}'s response:\n"
+                responses += chat_npc_forgetful(n, conflict_resolution_question) + "\n\n"
+
+            evaluation = chat_npc(Conflict_Resolution_Checker_ID, responses)
+            print(f"Evaluation: {evaluation}")
 
 
 if __name__ == "__main__":
     NPC_Manager_ID = 'NPC_Manager'
+    Conflict_Resolution_Checker_ID = 'Conflict_Resolver'
     Jett_ID = "Jett"
     Knox_ID = "Knox"
     npcs.append(Jett_ID)
     npcs.append(Knox_ID)
+
+    with open("ConflictResolution_question.txt", 'r') as f:
+        conflict_resolution_question = f.read()
 
     sessions = load_sessions()
     if (not sessions):
@@ -63,6 +105,7 @@ if __name__ == "__main__":
         # Generate a whole new scenario and set up agents
         sessions = {}
         Bs_data = init_npc_manager(NPC_Manager_ID, 'NPCmanager_prompt.txt')
+        init_conflict_resolution_checker(Conflict_Resolution_Checker_ID, 'ConflictResolution_prompt.txt')
 
         background_jett = Bs_data.find('background', class_=Jett_ID)
         background_knox = Bs_data.find('background', class_=Knox_ID)

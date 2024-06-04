@@ -54,6 +54,17 @@ def send_chat(sessionID, chat, sessions):
     sessions[sessionID] = session
     return completion.choices[0].message.content
 
+def send_chat_without_saving(sessionID, chat, sessions):
+    session = get_session(sessionID, sessions)
+    completion = client.chat.completions.create(
+        model=model,
+        messages= session + [
+            {"role": "user", "content": chat}
+        ],
+        temperature=0.7,
+    )
+    return completion.choices[0].message.content
+
 # Save chat histories to a file
 def save_data(sessions):
     with open(sessions_file_path, "wb") as pickle_file:
