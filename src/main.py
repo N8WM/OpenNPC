@@ -8,6 +8,23 @@ global NPC_Manager_ID
 global Conflict_Resolution_Checker_ID
 global conflict_resolution_question
 
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKCYAN = '\033[96m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
+npc_to_color = {
+    "Jett": f"{bcolors.BOLD}{bcolors.OKGREEN}Jett{bcolors.ENDC}",
+    "Knox": f"{bcolors.BOLD}{bcolors.OKBLUE}Knox{bcolors.ENDC}",
+    "Player": f"{bcolors.BOLD}{bcolors.OKCYAN}Player{bcolors.ENDC}"
+}
+
 # Have the NPC manager generate a scenario
 def init_npc_manager(session_id, prompt_file):
     with open(prompt_file, 'r') as f:
@@ -52,7 +69,7 @@ def evaluate_conflict(n,npc,new_responses):
 
 def chat_loop():
     print("\n\n\n\n\n\n")
-    print("~~~ Welcome to the AI NPC chat demo! ~~~\n\n")
+    print(f"{bcolors.HEADER}~~~ Welcome to the AI NPC chat demo! ~~~{bcolors.ENDC}\n\n")
     print(f"Available NPCs: {npcs}\n\n"
             + "Commands\n\n"
             + "TALK <NPC>\tEnd any current conversations and talk to the given NPC.\n"
@@ -67,7 +84,8 @@ def chat_loop():
         new_responses[n] = 0
 
     while True:
-        user_input = input("\n> ")
+        user_input = input(f"\n{npc_to_color['Player']}\n> ")
+        print()
         user_isdone= any(word in user_input.lower() for word in end_words)
         if (user_input.lower() == "evaluate"):
             responses,new_responses=evaluate_conflict(n,npc,new_responses)
@@ -82,16 +100,16 @@ def chat_loop():
                 print(f"{new_npc} is not a valid NPC.")
                 continue
             if (npc != ""):
-                print(f"You are no longer talking to {npc}.")
+                print(f"You are no longer talking to {npc_to_color[npc].strip()}.")
             npc = new_npc
-            print(f"You are now talking to {npc}.")
+            print(f"You are now talking to {npc_to_color[npc].strip()}.")
         elif (npc == ""):
             print("You are not talking to anyone yet.")
         else:
             convo_len+=1
             response = chat_npc(npc, "" + user_input)
             new_responses[npc] = 1
-            print(f"{npc}: {response}\n")
+            print(f"{npc_to_color[npc]}\n{response}\n")
 
         # uncomment this to see conflict score after each response
         # allNew = True
