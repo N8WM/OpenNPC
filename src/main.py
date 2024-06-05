@@ -108,7 +108,7 @@ def chat_loop():
             print("You are not talking to anyone yet.")
         else:
             convo_len+=1
-            response = chat_npc(npc, "" + user_input)
+            response = chat_npc(npc, "Player: " + user_input)
             new_responses[npc] = 1
             print(f"{npc_to_color[npc]}\n{response}\n")
 
