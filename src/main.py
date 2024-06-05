@@ -1,4 +1,5 @@
 from ai_handler import *
+from openai import APIError
 
 npcs = []
 
@@ -46,8 +47,11 @@ def chat_loop():
         elif (npc == ""):
             print("You are not talking to anyone yet.")
         else:
-            response = chat_npc(npc, "" + user_input)
-            print(f"{npc}: {response}\n")
+            try:
+                response = chat_npc(npc, "" + user_input)
+                print(f"{npc}: {response}\n")
+            except APIError:
+                print("Failed to connect to the AI server. Make sure the server is running and try again.")
 
 
 if __name__ == "__main__":
