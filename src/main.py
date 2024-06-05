@@ -1,4 +1,5 @@
 from ai_handler import *
+import sys
 
 npcs = []
 
@@ -123,6 +124,17 @@ def chat_loop():
 
 
 if __name__ == "__main__":
+
+    args = sys.argv
+
+    new_game = False
+    if (len(args) > 1):
+        if args[1] in ["-n", "--new"]:
+            new_game = True
+        else:
+            print(f"Usage: {args[0]} [-n|--new]")
+            sys.exit(1)
+
     NPC_Manager_ID = 'NPC_Manager'
     Conflict_Resolution_Checker_ID = 'Conflict_Resolver'
     Jett_ID = "Jett"
@@ -133,10 +145,14 @@ if __name__ == "__main__":
     with open("ConflictResolution_question.txt", 'r') as f:
         conflict_resolution_question = f.read()
 
-    sessions = load_sessions()
+    sessions = None
+    if not new_game:
+        sessions = load_sessions()
+
     if (not sessions):
         # If failed to load sessions from file
         # Generate a whole new scenario and set up agents
+        print("Starting a new game...")
         sessions = {}
         Bs_data = init_npc_manager(NPC_Manager_ID, 'NPCmanager_prompt.txt')
         init_conflict_resolution_checker(Conflict_Resolution_Checker_ID, 'ConflictResolution_prompt.txt')
@@ -159,6 +175,9 @@ if __name__ == "__main__":
 
         init_npc(Jett_ID, jett_full_prompt)
         init_npc(Knox_ID, knox_full_prompt)
+
+    else:
+        print("Loaded previous session data.")
 
     chat_loop()
 
