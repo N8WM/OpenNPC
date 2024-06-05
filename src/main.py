@@ -96,7 +96,7 @@ def chat_loop():
                 allNew = False
                 break
 
-        if (allNew):
+        # if (allNew):
             # uncomment this to see conflict score after each response
             #responses,new_responses=evaluate_conflict(n,npc,new_responses)
 
