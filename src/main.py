@@ -53,6 +53,15 @@ def chat_npc(session_id, prompt):
 def chat_npc_forgetful(session_id, prompt):
     return send_chat_without_saving(session_id, prompt, sessions)
 
+def get_int_from_start(s):
+    num_str = ''
+    for char in s:
+        if char.isdigit():
+            num_str += char
+        else:
+            break
+    return int(num_str) if num_str else None
+
 def evaluate_conflict(n,npc,new_responses):
     print("Evaluating conflict...\n")
     responses = ""
@@ -63,20 +72,20 @@ def evaluate_conflict(n,npc,new_responses):
 
     evaluation_data = chat_npc(Conflict_Resolution_Checker_ID, responses)
     if evaluation_data is None:
-        evaluation_data = "<Rating class='Jett'>0</Rating><Rating class='Knox'>0</Rating>"
+        evaluation_data = "<rating class='Jett'>0</rating><rating class='Knox'>0</rating>"
     soup = BeautifulSoup(evaluation_data, "html.parser")
-    jett_rating = soup.find("Rating", _class="Jett")
-    knox_rating = soup.find("Rating", _class="Knox")
+    jett_rating = soup.find("rating", class_="Jett")
+    knox_rating = soup.find("rating", class_="Knox")
     if jett_rating is None:
-        jett_rating = "0"
+        jett_rating = 0
     else:
-        jett_rating = jett_rating.text
+        jett_rating = get_int_from_start(jett_rating.text) or 0
     if knox_rating is None:
-        knox_rating = "0"
+        knox_rating = 0
     else:
-        knox_rating = knox_rating.text
+        knox_rating = get_int_from_start(knox_rating.text) or 0
     try:
-        total = int(jett_rating) + int(knox_rating)
+        total = jett_rating + knox_rating
     except ValueError:
         total = 0
     evaluation_output = f"Jett's willingness to meet: {jett_rating}\nKnox's willingness to meet: {knox_rating}\nTotal: {total}"

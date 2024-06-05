@@ -37,3 +37,5 @@ Use the following format:
 <pov class="Knox">
 // plaintext
 </pov>
+```
+Only output the formatted xml part, nothing else is needed and will be disregarded if included.

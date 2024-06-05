@@ -7,7 +7,7 @@ When you recieve these messages, rate each person's willingness to meet from 0 t
 
 Respond in the following format:
 
-<Rating class="Jett" />
-<Rating class="Knox" />
+<rating class="Jett">#</rating>
+<rating class="Knox">#</rating>
 
 Where the `#` is the number rating.
