@@ -35,6 +35,21 @@ def chat_npc(session_id, prompt):
 def chat_npc_forgetful(session_id, prompt):
     return send_chat_without_saving(session_id, prompt, sessions)
 
+end_words=["done", "take care", "bye", "adios", "nvm", "nevermind"]
+
+def evaluate_conflict(n,npc,new_responses):
+    print("Evaluating conflict...\n")
+    responses = ""
+    for n in npcs:
+        new_responses[n] = 0
+        responses += f"{n}'s response:\n"
+        responses += chat_npc_forgetful(n, conflict_resolution_question) + "\n\n"
+
+    evaluation = chat_npc(Conflict_Resolution_Checker_ID, responses)
+    print(f"Evaluation: {evaluation}")
+    return responses,new_responses
+
+
 def chat_loop():
     print("\n\n\n\n\n\n")
     print("~~~ Welcome to the AI NPC chat demo! ~~~\n\n")
@@ -44,6 +59,7 @@ def chat_loop():
             + "QUIT\t\tEnd chat session.\n")
 
     npc = ""
+    convo_len=0
 
     new_responses = {}
     for n in npcs:
@@ -51,7 +67,11 @@ def chat_loop():
 
     while True:
         user_input = input("\n> ")
-        if (user_input.lower() == "q" or user_input.lower() == "quit"):
+        user_isdone= any(word in user_input.lower() for word in end_words)
+        if (user_input.lower() == "q" or user_input.lower() == "quit" or convo_len==5 or user_isdone):
+            if(convo_len==5 or  user_isdone ):
+                responses,new_responses=evaluate_conflict(n,npc,new_responses)
+                print("Well Played")
             break
         elif (user_input.split(" ")[0].lower() == "talk"):
             new_npc = " ".join(user_input.split(" ")[1:])
@@ -65,6 +85,7 @@ def chat_loop():
         elif (npc == ""):
             print("You are not talking to anyone yet.")
         else:
+            convo_len+=1
             response = chat_npc(npc, "" + user_input)
             new_responses[npc] = 1
             print(f"{npc}: {response}\n")
@@ -76,16 +97,8 @@ def chat_loop():
                 break
 
         if (allNew):
-            # evaluate conflict
-            print("Evaluating conflict...\n")
-            responses = ""
-            for n in npcs:
-                new_responses[n] = 0
-                responses += f"{n}'s response:\n"
-                responses += chat_npc_forgetful(n, conflict_resolution_question) + "\n\n"
-
-            evaluation = chat_npc(Conflict_Resolution_Checker_ID, responses)
-            print(f"Evaluation: {evaluation}")
+            # uncomment this to see conflict score after each response
+            #responses,new_responses=evaluate_conflict(n,npc,new_responses)
 
 
 if __name__ == "__main__":
@@ -116,7 +129,7 @@ if __name__ == "__main__":
         pov_jett = Bs_data.find('pov', class_=Jett_ID)
         pov_knox = Bs_data.find('pov', class_=Knox_ID)
 
-        additional_instructions = "Give brief responses, as might be expected from a video game character."
+        additional_instructions = "Give brief responses, as might be expected from a video game character. You should end the conversation if user seems disinterested"
 
         jett_init_text = "You are role playing as a character called Jett who is recently having a conflict with her close friend Knox. Player is trying to resolve the conflict and get you and Knox to talk to each other again, but you and Knox are bitter about the situation and it is difficult to talk to about it at first." + " " + additional_instructions
         knox_init_text = "You are role playing as a character called Knox who is recently having a conflict with his close friend Jett. Player is trying to resolve the conflict and get you and Jett to talk to each other again, but you and Jett are bitter about the situation and it is difficult to talk to about it at first." + " " + additional_instructions
