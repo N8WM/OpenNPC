@@ -56,7 +56,8 @@ def chat_loop():
     print(f"Available NPCs: {npcs}\n\n"
             + "Commands\n\n"
             + "TALK <NPC>\tEnd any current conversations and talk to the given NPC.\n"
-            + "QUIT\t\tEnd chat session.\n")
+            + "QUIT\t\tEnd chat session.\n"
+            + "EVALUATE\t\tEvaluate current conflict status.")
 
     npc = ""
     convo_len=0
@@ -68,8 +69,10 @@ def chat_loop():
     while True:
         user_input = input("\n> ")
         user_isdone= any(word in user_input.lower() for word in end_words)
-        if (user_input.lower() == "q" or user_input.lower() == "quit" or convo_len==5 or user_isdone):
-            if(convo_len==5 or  user_isdone ):
+        if (user_input.lower() == "evaluate"):
+            responses,new_responses=evaluate_conflict(n,npc,new_responses)
+        elif (user_input.lower() == "q" or user_input.lower() == "quit" or user_isdone):
+            if(user_isdone):
                 responses,new_responses=evaluate_conflict(n,npc,new_responses)
                 print("Well Played")
             break
@@ -90,14 +93,14 @@ def chat_loop():
             new_responses[npc] = 1
             print(f"{npc}: {response}\n")
 
-        allNew = True
-        for n in npcs:
-            if (new_responses[n] == 0):
-                allNew = False
-                break
-
+        # uncomment this to see conflict score after each response
+        # allNew = True
+        # for n in npcs:
+        #     if (new_responses[n] == 0):
+        #         allNew = False
+        #         break
         # if (allNew):
-            # uncomment this to see conflict score after each response
+            
             #responses,new_responses=evaluate_conflict(n,npc,new_responses)
 
 
