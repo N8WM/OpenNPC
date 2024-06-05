@@ -53,18 +53,34 @@ def chat_npc(session_id, prompt):
 def chat_npc_forgetful(session_id, prompt):
     return send_chat_without_saving(session_id, prompt, sessions)
 
-end_words=["done", "take care", "bye", "adios", "nvm", "nevermind"]
-
 def evaluate_conflict(n,npc,new_responses):
     print("Evaluating conflict...\n")
     responses = ""
     for n in npcs:
         new_responses[n] = 0
-        responses += f"{n}'s response:\n"
-        responses += chat_npc_forgetful(n, conflict_resolution_question) + "\n\n"
+        responses += f"{n}'s response:\n```"
+        responses += chat_npc_forgetful(n, conflict_resolution_question) + "\n```\n\n"
 
-    evaluation = chat_npc(Conflict_Resolution_Checker_ID, responses)
-    print(f"Evaluation: {evaluation}")
+    evaluation_data = chat_npc(Conflict_Resolution_Checker_ID, responses)
+    if evaluation_data is None:
+        evaluation_data = "<Rating class='Jett'>0</Rating><Rating class='Knox'>0</Rating>"
+    soup = BeautifulSoup(evaluation_data, "html.parser")
+    jett_rating = soup.find("Rating", _class="Jett")
+    knox_rating = soup.find("Rating", _class="Knox")
+    if jett_rating is None:
+        jett_rating = "0"
+    else:
+        jett_rating = jett_rating.text
+    if knox_rating is None:
+        knox_rating = "0"
+    else:
+        knox_rating = knox_rating.text
+    try:
+        total = int(jett_rating) + int(knox_rating)
+    except ValueError:
+        total = 0
+    evaluation_output = f"Jett's willingness to meet: {jett_rating}\nKnox's willingness to meet: {knox_rating}\nTotal: {total}"
+    print(f"{evaluation_output}\n")
     return responses,new_responses
 
 
@@ -87,13 +103,9 @@ def chat_loop():
     while True:
         user_input = input(f"\n{npc_to_color['Player']}\n> ")
         print()
-        user_isdone= any(word in user_input.lower() for word in end_words)
         if (user_input.lower() == "evaluate"):
             responses,new_responses=evaluate_conflict(n,npc,new_responses)
-        elif (user_input.lower() == "q" or user_input.lower() == "quit" or user_isdone):
-            if(user_isdone):
-                responses,new_responses=evaluate_conflict(n,npc,new_responses)
-                print("Well Played")
+        elif (user_input.lower() == "q" or user_input.lower() == "quit"):
             break
         elif (user_input.split(" ")[0].lower() == "talk"):
             new_npc = " ".join(user_input.split(" ")[1:])
@@ -166,7 +178,7 @@ if __name__ == "__main__":
         pov_jett = Bs_data.find('pov', class_=Jett_ID)
         pov_knox = Bs_data.find('pov', class_=Knox_ID)
 
-        additional_instructions = "You can eventually be convinced to make up with them in this role playing session, if the player does their job well. Give brief responses, as might be expected from a video game character. You should end the conversation if user seems disinterested. Assume the player knows nothing about your conflict or backstories."
+        additional_instructions = "You can eventually be convinced to make up with them in this role playing session, if the player does their job well. Give brief responses, as might be expected from a video game character. You should end the conversation if user seems disinterested. Assume the player knows nothing about your conflict or backstories. You will occasionally be asked to rate your state of willingness to meet; always start the session with a willingness rating of 0. Don't mention this unless specifically asked."
 
         jett_init_text = "You are role playing as a character called Jett (female) who is recently having a conflict with her close friend Knox (male). Player is trying to resolve the conflict and get you and Knox to talk to each other again, but you and Knox are bitter about the situation and it is difficult to talk to about it at first." + " " + additional_instructions
         knox_init_text = "You are role playing as a character called Knox (male) who is recently having a conflict with his close friend Jett (female). Player is trying to resolve the conflict and get you and Jett to talk to each other again, but you and Jett are bitter about the situation and it is difficult to talk to about it at first." + " " + additional_instructions

@@ -1,1 +1,4 @@
-How do you feel about your friend right now? How close would you say your conflict is to being resolved?
+PAUSE: PLAYER EXAMINATION TIME
+
+Are you currently willing to meet up with your other friend?
+How willing are you to meet up with your friend right now, on a scale from 0 to 5?

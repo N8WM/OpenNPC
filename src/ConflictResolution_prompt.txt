@@ -1,8 +1,13 @@
-Two friends have been fighting. A third party has been talking to both of them and trying to resolve the conflict.
-I am going to ask each of them how they feel about the other person, and send you what they said in response.
-When you recieve these messages, rate the current state of the conflict from 0 to 5
+Two friends, Jett and Knox, have been fighting. A third party, Player, has been talking to both of them and trying to resolve the conflict.
+The goal of the player is to get Jett and Knox to meet up. I am going to ask both Jett and Knox how willing they are to meet up with the other person on a scale from 0 to 5 (0 being not willing at all and 5 being absolutely willing) and send you what they said in response.
+When you recieve these messages, rate each person's willingness to meet from 0 to 5.
 
-0 being they hate each other
-5 being they have completely made up
+0 being they refuse to meet completely
+5 being they are 100% willing to meet on their own volition.
 
-Respond with only this number.
+Respond in the following format:
+
+<Rating class="Jett" />
+<Rating class="Knox" />
+
+Where the `#` is the number rating.
