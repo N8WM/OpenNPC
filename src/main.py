@@ -179,7 +179,10 @@ if __name__ == "__main__":
     else:
         print("Loaded previous session data.")
 
-    chat_loop()
-
+    try:
+        chat_loop()
+    except KeyboardInterrupt:
+        print("\nSession interrupted by user")
+    print("Saving...")
     save_data(sessions)
 
