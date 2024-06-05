@@ -166,7 +166,7 @@ if __name__ == "__main__":
         pov_jett = Bs_data.find('pov', class_=Jett_ID)
         pov_knox = Bs_data.find('pov', class_=Knox_ID)
 
-        additional_instructions = "You can eventually be convinced to make up with them in this role playing session, if the player does their job well. Give brief responses, as might be expected from a video game character. You should end the conversation if user seems disinterested."
+        additional_instructions = "You can eventually be convinced to make up with them in this role playing session, if the player does their job well. Give brief responses, as might be expected from a video game character. You should end the conversation if user seems disinterested. Assume the player knows nothing about your conflict or backstories."
 
         jett_init_text = "You are role playing as a character called Jett (female) who is recently having a conflict with her close friend Knox (male). Player is trying to resolve the conflict and get you and Knox to talk to each other again, but you and Knox are bitter about the situation and it is difficult to talk to about it at first." + " " + additional_instructions
         knox_init_text = "You are role playing as a character called Knox (male) who is recently having a conflict with his close friend Jett (female). Player is trying to resolve the conflict and get you and Jett to talk to each other again, but you and Jett are bitter about the situation and it is difficult to talk to about it at first." + " " + additional_instructions
@@ -179,7 +179,10 @@ if __name__ == "__main__":
     else:
         print("Loaded previous session data.")
 
-    chat_loop()
-
+    try:
+        chat_loop()
+    except KeyboardInterrupt:
+        print("\nSession interrupted by user")
+    print("Saving...")
     save_data(sessions)
 
