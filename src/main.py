@@ -129,12 +129,12 @@ if __name__ == "__main__":
         pov_jett = Bs_data.find('pov', class_=Jett_ID)
         pov_knox = Bs_data.find('pov', class_=Knox_ID)
 
-        additional_instructions = "Give brief responses, as might be expected from a video game character. You should end the conversation if user seems disinterested"
+        additional_instructions = "You can eventually be convinced to make up with them in this role playing session, if the player does their job well. Give brief responses, as might be expected from a video game character. You should end the conversation if user seems disinterested."
 
-        jett_init_text = "You are role playing as a character called Jett who is recently having a conflict with her close friend Knox. Player is trying to resolve the conflict and get you and Knox to talk to each other again, but you and Knox are bitter about the situation and it is difficult to talk to about it at first." + " " + additional_instructions
-        knox_init_text = "You are role playing as a character called Knox who is recently having a conflict with his close friend Jett. Player is trying to resolve the conflict and get you and Jett to talk to each other again, but you and Jett are bitter about the situation and it is difficult to talk to about it at first." + " " + additional_instructions
-        jett_full_prompt = f"{jett_init_text}\n\n=== Background ===\n\n{background_jett}\n{met}\n{bond}\n{pastime}\n\n=== Conflict ===\n\n{conflict}\n\n=== POV ===\n\n{pov_jett}"
-        knox_full_prompt = f"{knox_init_text}\n\n=== Background ===\n\n{background_knox}\n{met}\n{bond}\n{pastime}\n\n=== Conflict ===\n\n{conflict}\n\n=== POV ===\n\n{pov_knox}"
+        jett_init_text = "You are role playing as a character called Jett (female) who is recently having a conflict with her close friend Knox (male). Player is trying to resolve the conflict and get you and Knox to talk to each other again, but you and Knox are bitter about the situation and it is difficult to talk to about it at first." + " " + additional_instructions
+        knox_init_text = "You are role playing as a character called Knox (male) who is recently having a conflict with his close friend Jett (female). Player is trying to resolve the conflict and get you and Jett to talk to each other again, but you and Jett are bitter about the situation and it is difficult to talk to about it at first." + " " + additional_instructions
+        jett_full_prompt = f"{jett_init_text}\n\n=== Your Background ===\n\n{background_jett}\n\n=== Knox's Background ===\n{background_knox}\n\n=== How You and Knox Met ===\n{met}\n\n=== What You Bonded Over ===\n{bond}\n\n=== You and Knox's Favorite Pastime ===\n{pastime}\n\n=== Relationship Conflict ===\n\n{conflict}\n\n=== Your POV ===\n\n{pov_jett}"
+        knox_full_prompt = f"{knox_init_text}\n\n=== Your Background ===\n\n{background_knox}\n\n=== Jett Background ===\n{background_jett}\n\n=== How You and Jett Met ===\n{met}\n\n=== What You Bonded Over ===\n{bond}\n\n=== You and Jett's Favorite Pastime ===\n{pastime}\n\n=== Relationship Conflict ===\n\n{conflict}\n\n=== Your POV ===\n\n{pov_knox}"
 
         init_npc(Jett_ID, jett_full_prompt)
         init_npc(Knox_ID, knox_full_prompt)

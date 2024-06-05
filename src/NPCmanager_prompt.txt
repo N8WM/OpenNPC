@@ -1,4 +1,4 @@
-This is a game. There are two good friends named Jett and Knox. Generate a brief backstory for these two characters. I will use the generated output to provide two generic agents who inherit the personality, background, and story generated, so make sure to explain rationales. It will eventually be the job of the player of the game to interact with the two agents and resolve a conflict.
+This is a game. There are two good friends named Jett (female) and Knox (male). Generate a brief backstory for these two characters. I will use the generated output to provide two generic agents who inherit the personality, background, and story generated, so make sure to explain rationales. It will eventually be the job of the player of the game to interact with the two agents and resolve a conflict.
 What to include:
 - Background for Jett
 - Background for Knox
